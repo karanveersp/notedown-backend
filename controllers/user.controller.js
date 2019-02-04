@@ -2,6 +2,11 @@ const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 
 const userController = {
+  /**
+   * POST /signup handler.
+   * Expects: { email: ..., password: ...} in req
+   * Sends: { message: 'User created', tkoen: ..., userId: ..., expiresIn: ...} in res
+   */
   signUp: (req, res) => {
     const userData = { 
       email: req.body.email,
@@ -10,9 +15,13 @@ const userController = {
     const user = new User(userData);
     user.save()
       .then(result => {
+        // If we got here, the user is authenticated!
+        const token = jwt.sign({ email: userData.email, userId: result._id }, 'secret_key', { expiresIn: '1d' });
         res.status(201).json({
           message: 'User created',
-          result: result
+          token: token,
+          userId: result._id,
+          expiresIn: 86400
         });
       })
       .catch(err => {
@@ -23,6 +32,11 @@ const userController = {
       });
   },
 
+  /**
+   * POST /login handler
+   * Expects: { email: ..., password: ... } body in req.
+   * Sends: { token: ..., userId: ..., expiresIn: ...} in res.
+   */
   login: (req, res) => {
     const userData = {
       email: req.body.email,
