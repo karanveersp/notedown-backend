@@ -16,12 +16,12 @@ const userController = {
     user.save()
       .then(result => {
         // If we got here, the user is authenticated!
-        const token = jwt.sign({ email: userData.email, userId: result._id }, 'secret_key', { expiresIn: '1d' });
+        const token = jwt.sign({ email: userData.email, userId: result._id }, 'secret_key', { expiresIn: '1h' });
         res.status(201).json({
           message: 'User created',
           token: token,
           userId: result._id,
-          expiresIn: 86400
+          expiresIn: 3600
         });
       })
       .catch(err => {
@@ -57,11 +57,11 @@ const userController = {
               });
             }
             // If we got here, the user is authenticated!
-            const token = jwt.sign({ email: foundUser.email, userId: foundUser._id }, 'secret_key', { expiresIn: '1d' });
+            const token = jwt.sign({ email: foundUser.email, userId: foundUser._id }, 'secret_key', { expiresIn: '1h' });
             res.status(200).json({
               token: token,
               userId: foundUser._id,
-              expiresIn: 86400
+              expiresIn: 3600
             });
           })
           .catch(err => {

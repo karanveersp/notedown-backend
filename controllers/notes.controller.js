@@ -5,7 +5,8 @@ const notesController = {
    * Find all notes by user's id
    */
   getAll(req, res) {
-    const userId = req.body.userId;
+    const userId = req.userId;
+    console.log('UserId:', userId);
     Note.find({ author: userId })
       .then(notes => {
         res.status(200).json({ message: 'Fetched all notes', notes: notes });
@@ -27,7 +28,7 @@ const notesController = {
       .then(result => {
         res.status(201).json({
           message: 'Note Created',
-          note: result
+          noteId: result._id
         });
       })
       .catch(err => {
@@ -48,7 +49,7 @@ const notesController = {
       .then(result => {
         res
           .status(200)
-          .json({ message: 'Note updated', note: result, noteId: noteId });
+          .json({ message: 'Note updated' });
       })
       .catch(err => {
         console.log(err);
